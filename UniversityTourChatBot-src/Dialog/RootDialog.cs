@@ -38,6 +38,7 @@ namespace Microsoft.BotBuilderSamples.Dialog
 
         private async Task<DialogTurnResult> InitialStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+
             // Set values for generate answer options.
             var qnamakerOptions = new QnAMakerOptions
             {

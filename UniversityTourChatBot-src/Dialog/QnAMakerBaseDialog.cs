@@ -21,12 +21,12 @@ namespace Microsoft.BotBuilderSamples.Dialog
         // Dialog Options parameters
         public const float DefaultThreshold = 0.3F;
         public const int DefaultTopN = 3;
-        public const string DefaultNoAnswer = "Désolé, Je ne connais pas encore la réponse :(.";
+        public const string DefaultNoAnswer = "Désolé, Je ne connais pas encore la réponse.";
 
         // Card parameters
-        public const string DefaultCardTitle = "Did you mean:";
-        public const string DefaultCardNoMatchText = "None of the above.";
-        public const string DefaultCardNoMatchResponse = "Thanks for the feedback.";
+        public const string DefaultCardTitle = "Vouliez-vous dire:";
+        public const string DefaultCardNoMatchText = "Aucune de ces réponses.";
+        public const string DefaultCardNoMatchResponse = "Merci pour les commentaires.";
 
         // Define value names for values tracked inside the dialogs.
         public const string QnAOptions = "qnaOptions";
@@ -124,7 +124,7 @@ namespace Microsoft.BotBuilderSamples.Dialog
                     }
                 }
             }
-
+            
             // Calling QnAMaker to get response.
             var response = await _services.QnAMakerService.GetAnswersRawAsync(stepContext.Context, qnaMakerOptions).ConfigureAwait(false);
 
@@ -141,7 +141,7 @@ namespace Microsoft.BotBuilderSamples.Dialog
             if (isActiveLearningEnabled && response.Answers.Any() && response.Answers.First().Score <= maximumScoreForLowScoreVariation)
             {
                 // Get filtered list of the response that support low score variation criteria.
-                response.Answers = _services.QnAMakerService.GetLowScoreVariation(response.Answers);
+               // response.Answers = _services.QnAMakerService.GetLowScoreVariation(response.Answers);
 
                 if (response.Answers.Count() > 1)
                 {
@@ -204,11 +204,36 @@ namespace Microsoft.BotBuilderSamples.Dialog
 
                     // Call Active Learning Train API
                     await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
+                    await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
+                    await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
+                    await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
+                    await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
+                    await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
+
 
                     return await stepContext.NextAsync(new List<QueryResult>() { qnaResult }, cancellationToken).ConfigureAwait(false);
                 }
                 else if (reply.Equals(qnaDialogResponseOptions.CardNoMatchText, StringComparison.OrdinalIgnoreCase))
                 {
+                    var records = new FeedbackRecord[]
+                   {
+                        new FeedbackRecord
+                        {
+                            UserId = stepContext.Context.Activity.Id,
+                            UserQuestion = currentQuery,
+                            QnaId = 202,
+                        }
+                   };
+
+                    var feedbackRecords = new FeedbackRecords { Records = records };
+
+                    // Call Active Learning Train API
+                    await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
+                    await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
+                    await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
+                    await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
+                    await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
+                    await _services.QnAMakerService.CallTrainAsync(feedbackRecords).ConfigureAwait(false);
                     await stepContext.Context.SendActivityAsync(qnaDialogResponseOptions.CardNoMatchResponse, cancellationToken: cancellationToken).ConfigureAwait(false);
                     return await stepContext.EndDialogAsync().ConfigureAwait(false);
                 }

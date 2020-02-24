@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="https://cdn.botframework.com/botframework-webchat/latest/botchat.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/botchat.js"></script>
+    <style>
+        .wc-chatview-panel {
+            width: 350px;
+            height: 450px;
+            position: relative;
+        }
+
+        #bot {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+        }
+
+        .closechat {
+            top: 405px !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="bot"></div>
+</body>
+</html>
+<script>
+     var botConnection = new BotChat.DirectLine({
+            secret: 'k749AlOyoU8.x9dggIMgWBYj0fImTXroexcH5dI8EvgZr8BJXd0qGMA'
+        });
+        BotChat.App({
+            botConnection: botConnection,
+            bot: { id: 'bot' },
+            user: { id: 'user' },
+            resize: 'detect'
+        }, document.getElementById("bot"));
+
+    $(function () {
+        $("div.wc-header").prop("isopen", "true");
+
+        $("div.wc-header").click(function () {
+            var isopen = $(this).prop("isopen");
+            //alert(isopen);
+            if (isopen == "true") {
+                $("div.wc-chatview-panel").addClass("closechat");
+                $("div.wc-header").prop("isopen", "false");
+            } else {
+                $("div.wc-chatview-panel.closechat").removeClass("closechat");
+                $("div.wc-header").prop("isopen", "true");
+            }
+        })
+    })
+</script>
